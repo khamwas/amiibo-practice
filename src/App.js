@@ -23,9 +23,9 @@ class App extends Component {
 
   changePage(direction) {
     if (direction === "up") {
-      this.setState({ page: this.state.page + 8 });
+      this.setState({ page: this.state.page + 10 });
     } else if (direction === "down") {
-      this.setState({ page: this.state.page - 8 });
+      this.setState({ page: this.state.page - 10 });
     }
   }
 
@@ -82,7 +82,7 @@ class App extends Component {
           <h4>Series: {elem.gameSeries}</h4>
         </div>
       ));
-    let finalDisplay = display.slice(this.state.page, this.state.page + 8);
+    let finalDisplay = display.slice(this.state.page, this.state.page + 10);
     return (
       <div className="App">
         <header className="App-header">
@@ -121,13 +121,13 @@ class App extends Component {
           {this.state.page > 0 ? (
             <button onClick={() => this.changePage("down")}>Back</button>
           ) : null}
-          {1 + this.state.page / 8 < Math.ceil((display.length - 1) / 8) ? (
+          {1 + this.state.page / 10 < Math.ceil((display.length - 1) / 10) ? (
             <button onClick={() => this.changePage("up")}>Next</button>
           ) : null}
         </div>
         <h2>
-          Page {1 + this.state.page / 8} of{" "}
-          {Math.ceil((display.length - 1) / 8)}
+          Page {1 + this.state.page / 10} of{" "}
+          {Math.ceil((display.length - 1) / 10)}
         </h2>
       </div>
     );
