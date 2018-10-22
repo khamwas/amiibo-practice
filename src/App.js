@@ -7,6 +7,8 @@ class App extends Component {
     super();
     this.state = {
       amiibo: [],
+      more: [],
+      modal: false,
       page: 0,
       type: "",
       gameSeries: "",
@@ -27,12 +29,32 @@ class App extends Component {
     }
   }
 
+  seeMore(tail) {
+    let item = this.state.amiibo.filter(elem => elem.tail === tail);
+    this.setState({ more: item });
+    this.setState({ modal: true });
+  }
+
+  closeMore() {
+    this.setState({ more: [] });
+    this.setState({ modal: false });
+  }
+
   componentDidMount() {
     axios
       .get("http://www.amiiboapi.com/api/amiibo")
       .then(result => this.setState({ amiibo: result.data.amiibo }));
   }
   render() {
+    let modalDisplay = this.state.more.map(elem => (
+      <div key={elem.tail}>
+        <img className="modalImg" src={elem.image} alt={elem.character} />
+        <h2>{elem.character}</h2>
+        <h4>
+          Series: {elem.gameSeries} <br /> Release: {elem.release.na}
+        </h4>
+      </div>
+    ));
     let display = this.state.amiibo
       .filter(item =>
         item.character
@@ -48,7 +70,11 @@ class App extends Component {
         item.type.toUpperCase().includes(this.state.type.toUpperCase())
       )
       .map(elem => (
-        <div className="card" key={elem.tail}>
+        <div
+          onClick={() => this.seeMore(elem.tail)}
+          className="card"
+          key={elem.tail}
+        >
           <img className="img" src={elem.image} alt={elem.character} />
           <h2>
             {elem.name} :{elem.type}
@@ -85,6 +111,12 @@ class App extends Component {
           </div>
         </header>
         <div className="cardContainer">{finalDisplay}</div>
+        {this.state.modal === true ? (
+          <div className="modal">
+            {modalDisplay}
+            <button onClick={() => this.closeMore()}>Close</button>
+          </div>
+        ) : null}
         <div className="bottomButtons">
           {this.state.page > 0 ? (
             <button onClick={() => this.changePage("down")}>Back</button>
